@@ -1,11 +1,11 @@
 import { assert } from './assert';
 import { Field } from './Field';
 import { RequestSource } from './RequestSource';
-import { SelectField } from './SelectField';
+import { SelectOperation } from './SelectOperation';
 
 export class Query {
   private source?: RequestSource;
-  private selectFields: SelectField[] = [];
+  private selectOperations: SelectOperation[] = [];
 
   getSource(): RequestSource | undefined {
     return this.source;
@@ -13,26 +13,26 @@ export class Query {
 
   setSource(source: RequestSource): void {
     this.source = source;
-    this.selectFields = [];
+    this.selectOperations = [];
   }
 
-  getSelectFields(): SelectField[] {
-    return this.selectFields;
+  getSelectOperations(): SelectOperation[] {
+    return this.selectOperations;
   }
 
-  addSelectField(selectField: SelectField): void {
+  addSelectOperation(selectOperation: SelectOperation): void {
     assert(this.source, 'Source not assigned');
-    assert(this.source.isAvailableField(selectField.field), 'Field not exist in source');
-    this.selectFields.push(selectField);
+    assert(this.source.isAvailableField(selectOperation.field), 'Field not exist in source');
+    this.selectOperations.push(selectOperation);
   }
 
-  removeSelectFieldAt(index: number): void {
-    this.selectFields.splice(index, 1);
+  removeSelectOperationAt(index: number): void {
+    this.selectOperations.splice(index, 1);
   }
 
   getGroupByFields(): Field[] {
-    return this.selectFields
-      .filter((selectField) => !selectField.isAggregate())
-      .map((selectField) => selectField.field);
+    return this.selectOperations
+      .filter((selectOperation) => !selectOperation.isAggregateOperation())
+      .map((selectOperation) => selectOperation.field);
   }
 }

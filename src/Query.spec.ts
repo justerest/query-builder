@@ -1,6 +1,6 @@
 import { Query } from './Query';
 import { RequestSource } from './RequestSource';
-import { SelectField } from './SelectField';
+import { SelectOperation } from './SelectOperation';
 
 describe('Query', () => {
   let query: Query;
@@ -24,52 +24,52 @@ describe('Query', () => {
     expect(query.getSource()).toBe(source);
   });
 
-  it('+getSelectFields() should returns SelectField[]', () => {
-    expect(query.getSelectFields()).toEqual([]);
+  it('+getSelectOperations() should returns SelectOperation[]', () => {
+    expect(query.getSelectOperations()).toEqual([]);
   });
 
-  it('+addSelectField() should add SelectField', () => {
+  it('+addSelectOperation() should add SelectOperation', () => {
     query.setSource(source);
-    const selectField = {} as SelectField;
-    query.addSelectField(selectField);
-    expect(query.getSelectFields()).toEqual([selectField]);
+    const selectOperation = {} as SelectOperation;
+    query.addSelectOperation(selectOperation);
+    expect(query.getSelectOperations()).toEqual([selectOperation]);
   });
 
-  it('+addSelectField() should throw error if source not set', () => {
-    const selectField = {} as SelectField;
-    expect(() => query.addSelectField(selectField)).toThrow();
+  it('+addSelectOperation() should throw error if source not set', () => {
+    const selectOperation = {} as SelectOperation;
+    expect(() => query.addSelectOperation(selectOperation)).toThrow();
   });
 
   it('+setSource() should reset select fields', () => {
     query.setSource(source);
-    const selectField = {} as SelectField;
-    query.addSelectField(selectField);
-    expect(query.getSelectFields()).toEqual([selectField]);
+    const selectOperation = {} as SelectOperation;
+    query.addSelectOperation(selectOperation);
+    expect(query.getSelectOperations()).toEqual([selectOperation]);
     query.setSource({} as RequestSource);
-    expect(query.getSelectFields()).toEqual([]);
+    expect(query.getSelectOperations()).toEqual([]);
   });
 
-  it('+removeSelectFieldAt() should remove select field at index', () => {
+  it('+removeSelectOperationAt() should remove select field at index', () => {
     query.setSource(source);
-    const selectField = {} as SelectField;
-    query.addSelectField(selectField);
-    expect(query.getSelectFields()).toEqual([selectField]);
-    query.removeSelectFieldAt(0);
-    expect(query.getSelectFields()).toEqual([]);
+    const selectOperation = {} as SelectOperation;
+    query.addSelectOperation(selectOperation);
+    expect(query.getSelectOperations()).toEqual([selectOperation]);
+    query.removeSelectOperationAt(0);
+    expect(query.getSelectOperations()).toEqual([]);
   });
 
   it('+getGroupByFields() should returns GroupByField[]', () => {
     expect(query.getGroupByFields()).toEqual([]);
   });
 
-  it('+addSelectField() without aggregate operation should add groupByFields', () => {
+  it('+addSelectOperation() not aggregate operation should add groupByFields', () => {
     query.setSource(source);
-    query.addSelectField({ isAggregate: () => false } as SelectField);
+    query.addSelectOperation({ isAggregateOperation: () => false } as SelectOperation);
     expect(query.getGroupByFields().length).toBe(1);
   });
 
-  it('+addSelectField() should throw error if field not match source', () => {
+  it('+addSelectOperation() should throw error if field not match source', () => {
     query.setSource(new RequestSource([]));
-    expect(() => query.addSelectField({} as SelectField)).toThrow();
+    expect(() => query.addSelectOperation({} as SelectOperation)).toThrow();
   });
 });

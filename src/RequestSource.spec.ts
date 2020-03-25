@@ -1,6 +1,5 @@
 import { Field } from './Field';
 import { RequestSource } from './RequestSource';
-import { SelectField } from './SelectField';
 
 describe('RequestSource', () => {
   let source: RequestSource;
