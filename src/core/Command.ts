@@ -1,5 +1,5 @@
 import { makeId } from 'src/utils/makeId';
-import { Field } from '../Field';
+import { Field } from './Field';
 
 export enum CommandType {
   Select = 'select',

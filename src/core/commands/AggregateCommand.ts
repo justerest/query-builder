@@ -1,12 +1,12 @@
 import { makeId } from 'src/utils/makeId';
+import { Command, CommandType } from '../Command';
 import { Field } from '../Field';
-import { Command, CommandType } from './Command';
-import { GroupByCommand } from './GroupByCommand';
+import { GroupByCommand } from './groupBy/GroupByCommand';
 
 export enum AggregateOperation {
-  COUNT = 'COUNT',
-  AVG = 'AVG',
-  SUM = 'SUM',
+  Count = 'count',
+  Average = 'avg',
+  Summa = 'sum',
 }
 
 export class AggregateCommand extends Command {

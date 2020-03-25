@@ -1,6 +1,6 @@
-import { Field } from '../Field';
-import { AggregateCommand } from './AggregateCommand';
-import { Command, CommandType } from './Command';
+import { Command, CommandType } from '../../Command';
+import { Field } from '../../Field';
+import { AggregateCommand } from '../AggregateCommand';
 
 export class GroupByCommand extends Command {
   static isGroupByCommand(command: Command): command is GroupByCommand {

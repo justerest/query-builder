@@ -1,9 +1,9 @@
-import { AggregateCommand, AggregateOperation } from './commands/AggregateCommand';
-import { GroupByCommand } from './commands/GroupByCommand';
-import { SelectCommand } from './commands/SelectCommand';
-import { Field } from './Field';
+import { Field } from '../Field';
+import { Querier } from '../Querier';
+import { AggregateCommand, AggregateOperation } from './AggregateCommand';
+import { GroupByCommand } from './groupBy/GroupByCommand';
 import { PresentationCommandBuilder } from './PresentationCommandBuilder';
-import { Querier } from './Querier';
+import { SelectCommand } from './SelectCommand';
 
 const fields = [new Field('1', '1'), new Field('2', '2')];
 

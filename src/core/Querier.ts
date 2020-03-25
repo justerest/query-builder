@@ -1,5 +1,5 @@
 import { assert } from '../utils/assert';
-import { Command } from './commands/Command';
+import { Command } from './Command';
 
 export class Querier {
   private commandIdSet: Set<string> = new Set();

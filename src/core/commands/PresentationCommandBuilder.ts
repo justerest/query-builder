@@ -1,7 +1,7 @@
-import { CommandBuilder } from './CommandBuilder';
-import { AggregateCommand, AggregateOperation } from './commands/AggregateCommand';
-import { SelectCommand } from './commands/SelectCommand';
-import { Field, FieldType } from './Field';
+import { CommandBuilder } from '../CommandBuilder';
+import { Field, FieldType } from '../Field';
+import { AggregateCommand, AggregateOperation } from './AggregateCommand';
+import { SelectCommand } from './SelectCommand';
 
 export class PresentationCommandBuilder extends CommandBuilder<SelectCommand | AggregateCommand> {
   protected createCommands(field: Field): Array<SelectCommand | AggregateCommand> {

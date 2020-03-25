@@ -1,5 +1,5 @@
 import { Field } from '../Field';
-import { GroupByCommand } from './GroupByCommand';
+import { GroupByCommand } from './groupBy/GroupByCommand';
 import { SelectCommand } from './SelectCommand';
 
 const field = new Field('', '');

@@ -1,8 +1,8 @@
-import { AggregateCommand, AggregateOperation } from './commands/AggregateCommand';
-import { GroupByCommand } from './commands/GroupByCommand';
-import { Field } from './Field';
+import { Field } from '../../Field';
+import { Querier } from '../../Querier';
+import { AggregateCommand, AggregateOperation } from '../AggregateCommand';
+import { GroupByCommand } from './GroupByCommand';
 import { GroupByCommandBuilder } from './GroupByCommandBuilder';
-import { Querier } from './Querier';
 
 const fields = [new Field('1', '1'), new Field('2', '2')];
 
@@ -25,7 +25,7 @@ describe('GroupByCommandBuilder', () => {
 
   it('+getAvailableCommands() should exclude incompatible commands', () => {
     const querier = new Querier();
-    querier.addCommand(new AggregateCommand(new Field('1', '1'), AggregateOperation.AVG));
+    querier.addCommand(new AggregateCommand(new Field('1', '1'), AggregateOperation.Average));
     const result = builder.getAvailableCommands(fields, querier).map((command) => command.field);
     expect(result).toEqual([new Field('2', '2')]);
   });

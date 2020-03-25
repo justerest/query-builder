@@ -1,5 +1,5 @@
-import { Field } from '../Field';
-import { AggregateCommand, AggregateOperation } from './AggregateCommand';
+import { Field } from '../../Field';
+import { AggregateCommand, AggregateOperation } from '../AggregateCommand';
 import { GroupByCommand } from './GroupByCommand';
 
 const field = new Field('', '');
@@ -16,7 +16,7 @@ describe('GroupByCommand', () => {
   });
 
   it('+compatible() should returns false for aggregate command with same field', () => {
-    const aggregateCommand = new AggregateCommand(field, AggregateOperation.SUM);
+    const aggregateCommand = new AggregateCommand(field, AggregateOperation.Summa);
     expect(groupByCommand.compatible([aggregateCommand])).toBe(false);
   });
 });

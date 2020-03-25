@@ -1,6 +1,6 @@
+import { Command, CommandType } from '../Command';
 import { Field } from '../Field';
-import { Command, CommandType } from './Command';
-import { GroupByCommand } from './GroupByCommand';
+import { GroupByCommand } from './groupBy/GroupByCommand';
 
 export class SelectCommand extends Command {
   static isSelectCommand(command: Command): command is SelectCommand {

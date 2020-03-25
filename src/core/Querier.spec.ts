@@ -1,4 +1,4 @@
-import { Command } from './commands/Command';
+import { Command } from './Command';
 import { SelectCommand } from './commands/SelectCommand';
 import { Field } from './Field';
 import { Querier } from './Querier';
