@@ -1,4 +1,4 @@
-import { Query } from './Query';
+import { Query, SortCondition } from './Query';
 import { RequestSource } from './RequestSource';
 import { SelectOperation } from './SelectOperation';
 
@@ -117,5 +117,22 @@ describe('Query', () => {
     query.addGroupByField({ name: '', type: '' });
     query.setSource({} as RequestSource);
     expect(query.getGroupByFields()).toEqual([]);
+  });
+
+  it('+getSortConditions() should returns SortCondition[]', () => {
+    expect(query.getSortConditions()).toEqual([]);
+  });
+
+  it('+addSortConditions() should add SortConditions', () => {
+    const sortCondition: SortCondition = {} as SortCondition;
+    query.addSortCondition(sortCondition);
+    expect(query.getSortConditions()).toEqual([sortCondition]);
+  });
+
+  it('+removeSortConditions() should remove sortCondition at index', () => {
+    const sortCondition: SortCondition = {} as SortCondition;
+    query.addSortCondition(sortCondition);
+    query.removeSortConditions(0);
+    expect(query.getSortConditions()).toEqual([]);
   });
 });

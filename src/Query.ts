@@ -3,10 +3,21 @@ import { Field } from './Field';
 import { RequestSource } from './RequestSource';
 import { SelectOperation } from './SelectOperation';
 
+enum Direction {
+  Asc = 'asc',
+  Desc = 'desc',
+}
+
+export interface SortCondition {
+  field: Field;
+  direction: Direction;
+}
+
 export class Query {
   private source?: RequestSource;
   private selectOperations: SelectOperation[] = [];
   private groupByFields: Field[] = [];
+  private sortConditions: SortCondition[] = [];
 
   getSource(): RequestSource | undefined {
     return this.source;
@@ -16,6 +27,7 @@ export class Query {
     this.source = source;
     this.selectOperations = [];
     this.groupByFields = [];
+    this.sortConditions = [];
   }
 
   getSelectOperations(): SelectOperation[] {
@@ -84,5 +96,19 @@ export class Query {
 
   removeGroupByFieldAt(index: number): void {
     this.groupByFields.splice(index, 1);
+  }
+
+  getSortConditions(): SortCondition[] {
+    return this.sortConditions;
+  }
+
+  addSortCondition(sortCondition: SortCondition): void {
+    this.assertSourceAssigned();
+    this.assertAvailableField(sortCondition.field);
+    this.sortConditions.push(sortCondition);
+  }
+
+  removeSortConditions(index: number): void {
+    this.sortConditions.splice(index, 1);
   }
 }
