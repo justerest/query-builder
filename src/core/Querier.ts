@@ -19,6 +19,7 @@ export class Querier {
   }
 
   removeCommand(command: Command): void {
+    if (this.isRelative(command)) return;
     if (this.commandIdSet.has(command.id)) {
       const index = this.commands.findIndex((c) => c.id === command.id);
       assert(index !== -1, 'Remove command error');
@@ -26,5 +27,9 @@ export class Querier {
       this.commandIdSet.delete(command.id);
     }
     command.relativeCommands?.().forEach((c) => this.removeCommand(c));
+  }
+
+  private isRelative(command: Command): boolean {
+    return this.commands.some((c) => c.relativeCommands?.().some((rc) => rc.id === command.id));
   }
 }

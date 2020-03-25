@@ -1,4 +1,5 @@
 import { Command } from './Command';
+import { GroupByCommand } from './commands/groupBy/GroupByCommand';
 import { SelectCommand } from './commands/SelectCommand';
 import { Field } from './Field';
 import { Querier } from './Querier';
@@ -48,6 +49,13 @@ describe('Querier', () => {
     expect(querier.getCommands()).toHaveLength(2);
     querier.removeCommand(new SelectCommand(new Field('', '')));
     expect(querier.getCommands()).toHaveLength(0);
+  });
+
+  it('+removeCommand() should skip remove relative command', () => {
+    querier.addCommand(new SelectCommand(new Field('', '')));
+    expect(querier.getCommands()).toHaveLength(2);
+    querier.removeCommand(new GroupByCommand(new Field('', '')));
+    expect(querier.getCommands()).toHaveLength(2);
   });
 
   it('+addCommand() should throw error if addition command not compatible', () => {
