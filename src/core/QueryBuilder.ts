@@ -14,6 +14,10 @@ export class QueryBuilder {
   private source?: RequestSource;
   private query = new Query();
 
+  getQuery(): Query {
+    return this.query;
+  }
+
   getSource(): RequestSource | undefined {
     return this.source;
   }
@@ -46,6 +50,7 @@ export class QueryBuilder {
   }
 
   addSelectOperation(selectOperation: SelectOperation): void {
+    console.log('QueryBuilder -> addSelectOperation -> selectOperation', selectOperation);
     this.query.addSelectOperation(selectOperation);
   }
 }
