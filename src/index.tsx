@@ -1,77 +1,85 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 
-import { QueryBuilder } from './core/QueryBuilder';
-import { RequestSource } from './core/RequestSource';
+import { AggregateCommand } from './core/commands/AggregateCommand';
+import { GroupByCommand } from './core/commands/groupBy/GroupByCommand';
+import { GroupByCommandBuilder } from './core/commands/groupBy/GroupByCommandBuilder';
+import { PresentationCommandBuilder } from './core/commands/PresentationCommandBuilder';
+import { SelectCommand } from './core/commands/SelectCommand';
+import { Field } from './core/Field';
+import { Querier } from './core/Querier';
 
-const builder = new QueryBuilder();
-builder.setSource(
-  new RequestSource([
-    { name: 'prop 1', type: 'string' },
-    { name: 'prop 2', type: 'number' },
-  ]),
-);
+const presentationCommandBuilder = new PresentationCommandBuilder();
+const groupByCommandBuilder = new GroupByCommandBuilder();
+const fields = [new Field('prop1', 'string'), new Field('prop2', 'number')];
+const querier = new Querier();
 
 const App: React.FC = () => {
   const [, update] = useState({});
-  const query = builder.getQuery();
+  const queryPresentationCommands = querier
+    .getCommands()
+    .filter(
+      (command): command is SelectCommand | AggregateCommand =>
+        SelectCommand.isSelectCommand(command) || AggregateCommand.isAggregateCommand(command),
+    );
   return (
     <main>
-      <h3>Applied Selected Operations</h3>
+      <h3>Applied Presentation Operations</h3>
       <ul>
-        {query.getSelectOperations().map((selectOperation, index) => (
+        {queryPresentationCommands.map((command) => (
           <li
-            key={selectOperation.field.name + selectOperation.aggregateOperation}
+            key={command.id}
             onClick={() => {
-              query.removeSelectOperationAt(index);
+              querier.removeCommand(command);
               update({});
             }}
           >
-            {selectOperation.field.name} {selectOperation.aggregateOperation ?? 'NO AGGR'}
+            {command.field.name} {(command as AggregateCommand).aggregateOperation}
           </li>
         ))}
       </ul>
-      <h3>Available Selected Operations</h3>
+      <h3>Available Presentation Operations</h3>
       <ul>
-        {builder.getAvailableSelectOperationFields().flatMap((field) =>
-          builder.getAvailableSelectOperationsForField(field).map((selectOperation) => (
-            <li
-              key={field.name + selectOperation.aggregateOperation}
-              onClick={() => {
-                builder.addSelectOperation(selectOperation);
-                update({});
-              }}
-            >
-              {field.name} {selectOperation.aggregateOperation ?? 'NO AGGR'}
-            </li>
-          )),
-        )}
+        {presentationCommandBuilder.getAvailableCommands(fields, querier).map((command) => (
+          <li
+            key={command.id}
+            onClick={() => {
+              querier.addCommand(command);
+              update({});
+            }}
+          >
+            {command.field.name} {(command as AggregateCommand).aggregateOperation}
+          </li>
+        ))}
       </ul>
       <h3>Applied Group By Fields</h3>
       <ul>
-        {query.getGroupByFields().map((field, index) => (
-          <li
-            key={field.name}
-            onClick={() => {
-              query.removeGroupByFieldAt(index);
-              update({});
-            }}
-          >
-            group by {field.name}
-          </li>
-        ))}
+        {querier
+          .getCommands()
+          .filter(GroupByCommand.isGroupByCommand)
+          .map((command) => (
+            <li
+              key={command.id}
+              onClick={() => {
+                querier.removeCommand(command);
+                update({});
+              }}
+            >
+              grouped by {command.field.name}
+            </li>
+          ))}
       </ul>
       <h3>Available Group By Fields</h3>
       <ul>
-        {builder.getAvailableGroupByFields().map((field) => (
+        {groupByCommandBuilder.getAvailableCommands(fields, querier).map((command) => (
           <li
-            key={field.name}
+            key={command.id}
             onClick={() => {
-              builder.addGroupByField(field);
+              querier.addCommand(command);
               update({});
             }}
           >
-            {field.name}
+            {command.field.name}
           </li>
         ))}
       </ul>
