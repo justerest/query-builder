@@ -1,5 +1,9 @@
 import { makeId } from 'src/utils/makeId';
 
+export enum FieldType {
+  Number = 'number',
+}
+
 export class Field {
   id: string;
   name: string;
