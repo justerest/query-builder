@@ -1,16 +1,11 @@
-export interface Field {
+export class Field {
+  id: string;
   name: string;
   type: string;
-}
 
-export class Field {
-  static equals(field1: Field, field2: Field): boolean {
-    return field1.name === field2.name && field1.type === field2.type;
+  constructor(name: string, type: string) {
+    this.id = [name, type].join('-').toLowerCase();
+    this.name = name;
+    this.type = type;
   }
-
-  static some(array: Field[], field: Field): boolean {
-    return array.some((f) => Field.equals(f, field));
-  }
-
-  private constructor() {}
 }
