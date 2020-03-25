@@ -1,3 +1,4 @@
+import { makeId } from 'src/utils/makeId';
 import { Field } from '../Field';
 import { Command, CommandType } from './Command';
 import { GroupByCommand } from './GroupByCommand';
@@ -15,6 +16,7 @@ export class AggregateCommand extends Command {
 
   constructor(field: Field, public aggregateOperation: AggregateOperation) {
     super(CommandType.Aggregate, field);
+    this.id = makeId(this.id, aggregateOperation);
   }
 
   compatible(commands: Command[]): boolean {

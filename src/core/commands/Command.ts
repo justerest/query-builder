@@ -1,3 +1,4 @@
+import { makeId } from 'src/utils/makeId';
 import { Field } from '../Field';
 
 export enum CommandType {
@@ -12,7 +13,7 @@ export abstract class Command {
   type: CommandType;
 
   constructor(type: CommandType, field: Field) {
-    this.id = [type, field.id].join('-').toLowerCase();
+    this.id = makeId(type, field.id);
     this.type = type;
     this.field = field;
   }
