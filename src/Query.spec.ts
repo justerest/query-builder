@@ -1,6 +1,6 @@
-import { Query, SortCondition } from './Query';
-import { RequestSource } from './RequestSource';
+import { Query } from './Query';
 import { SelectOperation } from './SelectOperation';
+import { SortCondition } from './SortCondition';
 
 const selectOperation = new SelectOperation({ name: '', type: '' });
 
@@ -9,22 +9,10 @@ describe('Query', () => {
 
   beforeEach(() => {
     query = new Query();
-    query.setSource({ fields: [], isAvailableField: () => true });
   });
 
   it('should be created', () => {
     expect(query).toBeInstanceOf(Query);
-  });
-
-  it('+getSource() should returns undefined on init', () => {
-    query = new Query();
-    expect(query.getSource()).toBeUndefined();
-  });
-
-  it('+setSource() should set RequestSource', () => {
-    const newSource = {} as RequestSource;
-    query.setSource(newSource);
-    expect(query.getSource()).toBe(newSource);
   });
 
   it('+getSelectOperations() should returns SelectOperation[]', () => {
@@ -34,18 +22,6 @@ describe('Query', () => {
   it('+addSelectOperation() should add SelectOperation', () => {
     query.addSelectOperation(selectOperation);
     expect(query.getSelectOperations()).toEqual([selectOperation]);
-  });
-
-  it('+addSelectOperation() should throw error if source not set', () => {
-    query = new Query();
-    expect(() => query.addSelectOperation(selectOperation)).toThrow();
-  });
-
-  it('+setSource() should reset select fields', () => {
-    query.addSelectOperation(selectOperation);
-    expect(query.getSelectOperations()).toEqual([selectOperation]);
-    query.setSource({} as RequestSource);
-    expect(query.getSelectOperations()).toEqual([]);
   });
 
   it('+removeSelectOperationAt() should remove select field at index', () => {
@@ -64,11 +40,6 @@ describe('Query', () => {
     expect(query.getGroupByFields().length).toBe(1);
   });
 
-  it('+addSelectOperation() should throw error if field not match source', () => {
-    query.setSource(new RequestSource([]));
-    expect(() => query.addSelectOperation({} as SelectOperation)).toThrow();
-  });
-
   it('+addGroupByField() should add Field', () => {
     const field = { name: '', type: '' };
     query.addGroupByField(field);
@@ -80,18 +51,6 @@ describe('Query', () => {
     query.addGroupByField(field);
     query.removeGroupByFieldAt(0);
     expect(query.getGroupByFields()).toEqual([]);
-  });
-
-  it('+addGroupByField() should throw error if field not from source', () => {
-    query.setSource(new RequestSource([]));
-    const field = { name: '', type: '' };
-    expect(() => query.addGroupByField(field)).toThrow();
-  });
-
-  it('+addGroupByField() should throw error if no source', () => {
-    query = new Query();
-    const field = { name: '', type: '' };
-    expect(() => query.addGroupByField(field)).toThrow();
   });
 
   it('+addGroupByField() should throw error if exist aggregate operation with same field', () => {
@@ -111,12 +70,6 @@ describe('Query', () => {
     query.addGroupByField(field);
     query.addSelectOperation({ field, isAggregateOperation: () => false });
     expect(query.getSelectOperations()).toHaveLength(1);
-  });
-
-  it('+setSource() should reset group by fields', () => {
-    query.addGroupByField({ name: '', type: '' });
-    query.setSource({} as RequestSource);
-    expect(query.getGroupByFields()).toEqual([]);
   });
 
   it('+getSortConditions() should returns SortCondition[]', () => {

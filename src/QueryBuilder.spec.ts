@@ -1,4 +1,4 @@
-import { QueryBuilder } from './QueryBuilder';
+import { AggregateOperation, QueryBuilder } from './QueryBuilder';
 import { RequestSource } from './RequestSource';
 
 describe('QueryBuilder', () => {
@@ -36,5 +36,20 @@ describe('QueryBuilder', () => {
     const field = { name: '', type: '' };
     builder.setSource(new RequestSource([field]));
     expect(builder.getAvailableSelectOperationFields()).toEqual([field]);
+  });
+
+  it('+getAvailableSelectOperationsForField() should returns SelectOption[]', () => {
+    const field = { name: '', type: '' };
+    builder.setSource(new RequestSource([field]));
+    expect(builder.getAvailableSelectOperationsForField(field)).toHaveLength(1);
+  });
+
+  it('+getAvailableSelectOperationsForField() should returns SelectOption[]', () => {
+    const field = { name: '', type: 'number' };
+    builder.setSource(new RequestSource([field]));
+    const availableOperationsCount = Object.values(AggregateOperation).length + 1;
+    expect(builder.getAvailableSelectOperationsForField(field)).toHaveLength(
+      availableOperationsCount,
+    );
   });
 });
