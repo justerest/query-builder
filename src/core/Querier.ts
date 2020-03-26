@@ -2,10 +2,10 @@ import { assert } from '../utils/assert';
 import { Command } from './Command';
 
 export class Querier {
-  private commands: Command[] = [];
+  private commandMap: Map<string, Command> = new Map();
 
   getCommands(): Command[] {
-    return this.commands;
+    return [...this.commandMap.values()];
   }
 
   hasCommand(command: Command): boolean {
@@ -14,19 +14,17 @@ export class Querier {
 
   addCommand(command: Command): void {
     assert(command.compatible?.(this) ?? true, 'Command not compatible');
-    if (this.hasCommand(command)) return;
-    this.commands.push(command);
+    this.commandMap.set(command.id, command);
     command.relativeCommands?.forEach((c) => this.addCommand(c));
   }
 
   removeCommand(command: Command): void {
-    const index = this.commands.findIndex((c) => c.isMatch?.(command));
-    if (index === -1 || this.isRelativeCommand(command)) return;
-    this.commands.splice(index, 1);
+    if (!this.commandMap.has(command.id) || this.isRelativeCommand(command)) return;
+    this.commandMap.delete(command.id);
     command.relativeCommands?.forEach((c) => this.removeCommand(c));
   }
 
   private isRelativeCommand(command: Command): boolean {
-    return this.commands.some((c) => c.relativeCommands?.some((rc) => rc.isMatch(command)));
+    return this.getCommands().some((c) => c.relativeCommands?.some((rc) => rc.isMatch(command)));
   }
 }
