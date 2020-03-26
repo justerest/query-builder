@@ -16,22 +16,22 @@ describe('FilterCommand', () => {
     expect(command).toBeInstanceOf(FilterCommand);
   });
 
-  it('+compatible() should returns true for order by command with same field', () => {
+  it('+compatible() should returns true for filter command with same field', () => {
     const filterCommand = new FilterCommand(field, new Filter(Condition.Gt));
     const querier = new Querier();
     querier.addCommand(filterCommand);
     expect(command.compatible(querier)).toBe(true);
   });
 
-  it('+isMatch() should returns true for base order by command', () => {
+  it('+isMatch() should returns true for base filter command', () => {
     expect(command.isMatch(FilterCommand.getBaseFilterCommand(field))).toBe(true);
   });
 
-  it('+isMatch() should returns true for same order by command', () => {
+  it('+isMatch() should returns true for same filter command', () => {
     expect(command.isMatch(new FilterCommand(field, new Filter(Condition.Eq)))).toBe(true);
   });
 
-  it('+isMatch() should returns false for order by command with another filter', () => {
+  it('+isMatch() should returns false for filter command with another filter', () => {
     expect(command.isMatch(new FilterCommand(field, new Filter(Condition.Gt)))).toBe(false);
   });
 });

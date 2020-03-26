@@ -26,10 +26,9 @@ describe('Querier', () => {
   });
 
   it('+addCommand() should skip addition of existing command', () => {
-    const command = {} as Command;
-    querier.addCommand(command);
-    querier.addCommand(command);
-    expect(querier.getCommands()).toEqual([command]);
+    querier.addCommand({ id: '1', isMatch: (command) => command.id === '1' } as Command);
+    querier.addCommand({ id: '1', isMatch: (command) => command.id === '1' } as Command);
+    expect(querier.getCommands()).toHaveLength(1);
   });
 
   it('+addCommand() should add relative commands', () => {
@@ -38,10 +37,17 @@ describe('Querier', () => {
   });
 
   it('+removeCommand() should remove command', () => {
-    querier.addCommand({ id: '1' } as Command);
+    querier.addCommand({ id: '1', isMatch: (command) => command.id === '1' } as Command);
     expect(querier.getCommands()).toHaveLength(1);
     querier.removeCommand({ id: '1' } as Command);
     expect(querier.getCommands()).toHaveLength(0);
+  });
+
+  it('+removeCommand() should skip remove unexciting command', () => {
+    querier.addCommand({ id: '1' } as Command);
+    expect(querier.getCommands()).toHaveLength(1);
+    querier.removeCommand({ id: '2' } as Command);
+    expect(querier.getCommands()).toHaveLength(1);
   });
 
   it('+removeCommand() should remove relative commands', () => {
