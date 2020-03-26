@@ -1,4 +1,4 @@
-import { makeId } from 'src/utils/makeId';
+import { createId } from 'src/utils/createId';
 import { Field } from './Field';
 import { Querier } from './Querier';
 
@@ -17,7 +17,7 @@ export abstract class Command {
   relativeCommands?: Command[];
 
   constructor(type: CommandType, field: Field) {
-    this.id = makeId(type, field.id);
+    this.id = createId(type, field.id);
     this.type = type;
     this.field = field;
   }

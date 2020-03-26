@@ -1,4 +1,4 @@
-import { makeId } from 'src/utils/makeId';
+import { createId } from 'src/utils/createId';
 
 export enum Condition {
   Eq = 'eq',
@@ -15,7 +15,7 @@ export class Filter {
   condition: Condition;
 
   constructor(condition: Condition) {
-    this.id = makeId('filter', condition);
+    this.id = createId(condition);
     this.condition = condition;
   }
 }

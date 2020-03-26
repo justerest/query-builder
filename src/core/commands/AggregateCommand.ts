@@ -1,4 +1,4 @@
-import { makeId } from 'src/utils/makeId';
+import { createId } from 'src/utils/createId';
 import { Command, CommandType } from '../Command';
 import { Field } from '../Field';
 import { Querier } from '../Querier';
@@ -21,7 +21,7 @@ export class AggregateCommand extends Command {
 
   constructor(field: Field, public aggregateOperation: AggregateOperation) {
     super(CommandType.Aggregate, field);
-    this.id = makeId(this.id, aggregateOperation);
+    this.id = createId(this.id, aggregateOperation);
   }
 
   protected isSameCompatible(querier: Querier): boolean {

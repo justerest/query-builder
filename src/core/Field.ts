@@ -1,4 +1,4 @@
-import { makeId } from 'src/utils/makeId';
+import { createId } from 'src/utils/createId';
 
 export enum FieldType {
   Number = 'number',
@@ -10,7 +10,7 @@ export class Field {
   type: string;
 
   constructor(name: string, type: string) {
-    this.id = makeId(name, type);
+    this.id = createId(name, type);
     this.name = name;
     this.type = type;
   }
