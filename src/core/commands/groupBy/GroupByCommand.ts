@@ -14,4 +14,8 @@ export class GroupByCommand extends Command {
   protected isSameCompatible(commands: Command[]): boolean {
     return !commands.filter(AggregateCommand.isAggregateCommand).some(this.isCommandWithSameField);
   }
+
+  isMatch(command: Command): boolean {
+    return GroupByCommand.isGroupByCommand(command) && this.isCommandWithSameField(command);
+  }
 }

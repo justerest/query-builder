@@ -12,4 +12,8 @@ export class SelectCommand extends Command {
   constructor(field: Field) {
     super(CommandType.Select, field);
   }
+
+  isMatch(command: Command): boolean {
+    return SelectCommand.isSelectCommand(command) && this.isCommandWithSameField(command);
+  }
 }

@@ -62,4 +62,13 @@ describe('Querier', () => {
     const notCompatibleCommand = ({ compatible: () => false } as unknown) as Command;
     expect(() => querier.addCommand(notCompatibleCommand)).toThrow();
   });
+
+  it('+hasCommand() should returns false if command not exist', () => {
+    expect(querier.hasCommand({ id: '1' } as Command)).toBe(false);
+  });
+
+  it('+hasCommand() should returns true if command exist', () => {
+    querier.addCommand(new GroupByCommand(new Field('', '')));
+    expect(querier.hasCommand(new GroupByCommand(new Field('', '')))).toBe(true);
+  });
 });

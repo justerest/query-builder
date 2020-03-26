@@ -22,4 +22,12 @@ export class AggregateCommand extends Command {
   protected isSameCompatible(commands: Command[]): boolean {
     return !commands.filter(GroupByCommand.isGroupByCommand).some(this.isCommandWithSameField);
   }
+
+  isMatch(command: Command): boolean {
+    return (
+      AggregateCommand.isAggregateCommand(command) &&
+      this.isCommandWithSameField(command) &&
+      (!command.aggregateOperation || command.aggregateOperation === this.aggregateOperation)
+    );
+  }
 }

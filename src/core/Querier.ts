@@ -9,6 +9,10 @@ export class Querier {
     return this.commands;
   }
 
+  hasCommand(command: Command): boolean {
+    return this.getCommands().some((c) => c.isMatch(command));
+  }
+
   addCommand(command: Command): void {
     assert(command.compatible?.(this.getCommands()) !== false, 'Command not compatible');
     if (this.commandIdSet.has(command.id)) return;
@@ -18,7 +22,7 @@ export class Querier {
   }
 
   removeCommand(command: Command): void {
-    if (this.isRelative(command)) return;
+    if (this.isRelativeCommand(command)) return;
     if (!this.commandIdSet.has(command.id)) return;
     const index = this.commands.findIndex((c) => c.id === command.id);
     assert(index !== -1, 'Remove command error');
@@ -27,7 +31,7 @@ export class Querier {
     command.relativeCommands?.forEach((c) => this.removeCommand(c));
   }
 
-  private isRelative(command: Command): boolean {
+  private isRelativeCommand(command: Command): boolean {
     return this.commands.some((c) => c.relativeCommands?.some((rc) => rc.id === command.id));
   }
 }

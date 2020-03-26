@@ -23,6 +23,8 @@ export abstract class Command {
     return this.isSameCompatible(commands) && this.isRelativeCommandsCompatible(commands);
   }
 
+  abstract isMatch(command: Command): boolean;
+
   private isRelativeCommandsCompatible(commands: Command[]): boolean {
     return this.relativeCommands?.every((rc) => rc.compatible(commands)) ?? true;
   }
