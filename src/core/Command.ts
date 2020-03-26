@@ -7,6 +7,7 @@ export enum CommandType {
   Aggregate = 'aggregate',
   GroupBy = 'groupBy',
   OrderBy = 'orderBy',
+  Filter = 'filter',
 }
 
 export abstract class Command {
