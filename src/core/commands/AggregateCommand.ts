@@ -11,10 +11,6 @@ export enum AggregateOperation {
 }
 
 export class AggregateCommand extends Command {
-  static getBaseAggregateCommand(field: Field): AggregateCommand {
-    return new AggregateCommand(field, '' as any);
-  }
-
   static isAggregateCommand(command: Command): command is AggregateCommand {
     return command.type === CommandType.Aggregate;
   }

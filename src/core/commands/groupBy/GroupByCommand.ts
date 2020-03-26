@@ -13,6 +13,11 @@ export class GroupByCommand extends Command {
   }
 
   protected isSameCompatible(querier: Querier): boolean {
-    return !querier.hasCommand(AggregateCommand.getBaseAggregateCommand(this.field));
+    return !querier
+      .getCommands()
+      .some(
+        (command) =>
+          AggregateCommand.isAggregateCommand(command) && command.field.id === this.field.id,
+      );
   }
 }

@@ -9,7 +9,7 @@ export class Querier {
   }
 
   hasCommand(command: Command): boolean {
-    return this.getCommands().some((c) => c.isMatch(command));
+    return this.commandMap.has(command.id);
   }
 
   addCommand(command: Command): void {
@@ -25,6 +25,6 @@ export class Querier {
   }
 
   private isRelativeCommand(command: Command): boolean {
-    return this.getCommands().some((c) => c.relativeCommands?.some((rc) => rc.isMatch(command)));
+    return this.getCommands().some((c) => c.relativeCommands?.some((rc) => rc.id === command.id));
   }
 }

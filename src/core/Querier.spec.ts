@@ -26,8 +26,8 @@ describe('Querier', () => {
   });
 
   it('+addCommand() should skip addition of existing command', () => {
-    querier.addCommand({ id: '1', isMatch: (command) => command.id === '1' } as Command);
-    querier.addCommand({ id: '1', isMatch: (command) => command.id === '1' } as Command);
+    querier.addCommand({ id: '1' } as Command);
+    querier.addCommand({ id: '1' } as Command);
     expect(querier.getCommands()).toHaveLength(1);
   });
 
@@ -37,7 +37,7 @@ describe('Querier', () => {
   });
 
   it('+removeCommand() should remove command', () => {
-    querier.addCommand({ id: '1', isMatch: (command) => command.id === '1' } as Command);
+    querier.addCommand({ id: '1' } as Command);
     expect(querier.getCommands()).toHaveLength(1);
     querier.removeCommand({ id: '1' } as Command);
     expect(querier.getCommands()).toHaveLength(0);

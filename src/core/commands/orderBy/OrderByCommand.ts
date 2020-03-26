@@ -9,10 +9,6 @@ export enum Direction {
 }
 
 export class OrderByCommand extends Command {
-  static getBaseOrderByCommand(field: Field): Command {
-    return new OrderByCommand(field, '' as any);
-  }
-
   static isOrderByCommand(command: Command): command is OrderByCommand {
     return command.type === CommandType.OrderBy;
   }
@@ -23,6 +19,10 @@ export class OrderByCommand extends Command {
   }
 
   protected isSameCompatible(querier: Querier): boolean {
-    return !querier.hasCommand(OrderByCommand.getBaseOrderByCommand(this.field));
+    return !querier
+      .getCommands()
+      .some(
+        (command) => OrderByCommand.isOrderByCommand(command) && command.field.id === this.field.id,
+      );
   }
 }

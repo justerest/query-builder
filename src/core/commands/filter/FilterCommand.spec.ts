@@ -22,16 +22,4 @@ describe('FilterCommand', () => {
     querier.addCommand(filterCommand);
     expect(command.compatible(querier)).toBe(true);
   });
-
-  it('+isMatch() should returns true for base filter command', () => {
-    expect(command.isMatch(FilterCommand.getBaseFilterCommand(field))).toBe(true);
-  });
-
-  it('+isMatch() should returns true for same filter command', () => {
-    expect(command.isMatch(new FilterCommand(field, new Filter(Condition.Eq)))).toBe(true);
-  });
-
-  it('+isMatch() should returns false for filter command with another filter', () => {
-    expect(command.isMatch(new FilterCommand(field, new Filter(Condition.Gt)))).toBe(false);
-  });
 });

@@ -21,16 +21,4 @@ describe('OrderByCommand', () => {
     querier.addCommand(orderByCommand);
     expect(command.compatible(querier)).toBe(false);
   });
-
-  it('+isMatch() should returns true for base order by command', () => {
-    expect(command.isMatch(OrderByCommand.getBaseOrderByCommand(field))).toBe(true);
-  });
-
-  it('+isMatch() should returns true for same order by command', () => {
-    expect(command.isMatch(new OrderByCommand(field, Direction.Asc))).toBe(true);
-  });
-
-  it('+isMatch() should returns false for order by command with another direction', () => {
-    expect(command.isMatch(new OrderByCommand(field, Direction.Desc))).toBe(false);
-  });
 });

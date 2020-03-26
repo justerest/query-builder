@@ -22,16 +22,4 @@ describe('AggregateCommand', () => {
     querier.addCommand(groupByCommand);
     expect(command.compatible(querier)).toBe(false);
   });
-
-  it('should match base aggregate command', () => {
-    expect(command.isMatch(AggregateCommand.getBaseAggregateCommand(field))).toBe(true);
-  });
-
-  it('should not match another aggregate command', () => {
-    expect(command.isMatch(new AggregateCommand(field, AggregateOperation.Count))).toBe(false);
-  });
-
-  it('should match same aggregate command', () => {
-    expect(command.isMatch(new AggregateCommand(field, AggregateOperation.Average))).toBe(true);
-  });
 });

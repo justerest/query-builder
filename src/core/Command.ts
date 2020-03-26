@@ -33,8 +33,4 @@ export abstract class Command {
   private isRelativeCommandsCompatible(querier: Querier): boolean {
     return this.relativeCommands?.every((rc) => rc.compatible(querier)) ?? true;
   }
-
-  isMatch(command: Command): boolean {
-    return this.id.startsWith(command.id);
-  }
 }
