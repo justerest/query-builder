@@ -11,21 +11,19 @@ export class Querier {
 
   addCommand(command: Command): void {
     assert(command.compatible?.(this.getCommands()) !== false, 'Command not compatible');
-    if (!this.commandIdSet.has(command.id)) {
-      this.commands.push(command);
-      this.commandIdSet.add(command.id);
-    }
+    if (this.commandIdSet.has(command.id)) return;
+    this.commands.push(command);
+    this.commandIdSet.add(command.id);
     command.relativeCommands?.forEach((c) => this.addCommand(c));
   }
 
   removeCommand(command: Command): void {
     if (this.isRelative(command)) return;
-    if (this.commandIdSet.has(command.id)) {
-      const index = this.commands.findIndex((c) => c.id === command.id);
-      assert(index !== -1, 'Remove command error');
-      this.commands.splice(index, 1);
-      this.commandIdSet.delete(command.id);
-    }
+    if (!this.commandIdSet.has(command.id)) return;
+    const index = this.commands.findIndex((c) => c.id === command.id);
+    assert(index !== -1, 'Remove command error');
+    this.commands.splice(index, 1);
+    this.commandIdSet.delete(command.id);
     command.relativeCommands?.forEach((c) => this.removeCommand(c));
   }
 
