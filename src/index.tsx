@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 
+import { CommandSplitter } from './CommandSplitter';
 import { AggregateCommand } from './core/commands/AggregateCommand';
 import { GroupByCommand } from './core/commands/groupBy/GroupByCommand';
 import { GroupByCommandBuilder } from './core/commands/groupBy/GroupByCommandBuilder';
@@ -104,21 +105,40 @@ const App: React.FC = () => {
           ))}
       </ul>
       <h3>Available Order By Fields</h3>
-      <ul>
-        {orderByCommandBuilder.getAvailableCommands(fields, querier).map((command) => (
-          <li
-            key={command.id}
-            onClick={() => {
-              querier.addCommand(command);
-              update({});
-            }}
-          >
-            {command.field.name} {command.direction}
-          </li>
-        ))}
-      </ul>
+      <OrderBySelectCmp></OrderBySelectCmp>
     </main>
   );
+
+  function OrderBySelectCmp(): any {
+    const commandSplitter = new CommandSplitter();
+    const orderByCommands = orderByCommandBuilder.getAvailableCommands(fields, querier);
+    const orderByFields = commandSplitter.getFields(orderByCommands);
+    const directions = commandSplitter.select(orderByCommands, {
+      select: (command) => command.direction,
+    });
+    return (
+      <>
+        <select>
+          {orderByFields.map((field) => (
+            <option key={field.id}>{field.name}</option>
+          ))}
+        </select>
+        <select>
+          {directions.map((direction) => (
+            <option key={direction}>{direction}</option>
+          ))}
+        </select>
+        <button
+          onClick={() => {
+            querier.addCommand(orderByCommands[0]);
+            update({});
+          }}
+        >
+          add
+        </button>
+      </>
+    );
+  }
 };
 
 ReactDOM.render(<App />, document.getElementById('root'));
