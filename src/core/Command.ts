@@ -6,6 +6,7 @@ export enum CommandType {
   Select = 'select',
   Aggregate = 'aggregate',
   GroupBy = 'groupBy',
+  OrderBy = 'orderBy',
 }
 
 export abstract class Command {
