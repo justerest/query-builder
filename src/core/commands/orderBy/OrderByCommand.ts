@@ -1,4 +1,5 @@
 import { Querier } from 'src/core/Querier';
+import { createId } from 'src/utils/createId';
 import { Command, CommandType } from '../../Command';
 import { Field } from '../../Field';
 
@@ -18,6 +19,7 @@ export class OrderByCommand extends Command {
 
   constructor(field: Field, public direction: Direction) {
     super(CommandType.OrderBy, field);
+    this.id = createId(this.id, direction);
   }
 
   protected isSameCompatible(querier: Querier): boolean {
