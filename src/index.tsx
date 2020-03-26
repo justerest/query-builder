@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 
-import { AggregateCommand } from './core/commands/AggregateCommand';
+import { AggregateCommand, AggregateOperation } from './core/commands/AggregateCommand';
 import { GroupByCommand } from './core/commands/groupBy/GroupByCommand';
 import { GroupByCommandBuilder } from './core/commands/groupBy/GroupByCommandBuilder';
 import { Direction, OrderByCommand } from './core/commands/orderBy/OrderByCommand';
@@ -11,6 +11,7 @@ import { SelectCommand } from './core/commands/SelectCommand';
 import { Field } from './core/Field';
 import { Querier } from './core/Querier';
 import { OrderByCommandSplitter } from './OrderByCommandSplitter';
+import { PresentationCommandSplitter } from './PresentationCommandSplitter';
 
 const presentationCommandBuilder = new PresentationCommandBuilder();
 const groupByCommandBuilder = new GroupByCommandBuilder();
@@ -28,7 +29,7 @@ const App: React.FC = () => {
     );
   return (
     <main>
-      <h3>Applied Presentation Operations</h3>
+      <h3>Presentation Operations</h3>
       <ul>
         {queryPresentationCommands.map((command) => (
           <li
@@ -42,21 +43,8 @@ const App: React.FC = () => {
           </li>
         ))}
       </ul>
-      <h3>Available Presentation Operations</h3>
-      <ul>
-        {presentationCommandBuilder.getAvailableCommands(fields, querier).map((command) => (
-          <li
-            key={command.id}
-            onClick={() => {
-              querier.addCommand(command);
-              update({});
-            }}
-          >
-            {command.field.name} {(command as AggregateCommand).aggregateOperation}
-          </li>
-        ))}
-      </ul>
-      <h3>Applied Group By Fields</h3>
+      <PresentationSelectCmp></PresentationSelectCmp>
+      <h3>Group By Fields</h3>
       <ul>
         {querier
           .getCommands()
@@ -73,7 +61,6 @@ const App: React.FC = () => {
             </li>
           ))}
       </ul>
-      <h3>Available Group By Fields</h3>
       <ul>
         {groupByCommandBuilder.getAvailableCommands(fields, querier).map((command) => (
           <li
@@ -87,7 +74,7 @@ const App: React.FC = () => {
           </li>
         ))}
       </ul>
-      <h3>Applied Order By Fields</h3>
+      <h3>Order By Fields</h3>
       <ul>
         {querier
           .getCommands()
@@ -104,10 +91,66 @@ const App: React.FC = () => {
             </li>
           ))}
       </ul>
-      <h3>Available Order By Fields</h3>
       <OrderBySelectCmp></OrderBySelectCmp>
     </main>
   );
+
+  function PresentationSelectCmp(): any {
+    const [selectedField, selectField] = useState(undefined as Field | undefined);
+    const [selectedAggregateOperation, selectAggregateOperation] = useState(
+      undefined as AggregateOperation | undefined,
+    );
+    const presentationCommandSplitter = new PresentationCommandSplitter();
+    const presentationCommands = presentationCommandBuilder.getAvailableCommands(fields, querier);
+    const presentationFields = presentationCommandSplitter.getFields(presentationCommands);
+    const aggregateOperations = presentationCommandSplitter.getAggregateOperations(
+      presentationCommands,
+      selectedField,
+    );
+    return (
+      !!presentationCommands.length && (
+        <>
+          <select>
+            <option value=''></option>
+            {presentationFields.map((field) => (
+              <option key={field.id} onClick={() => selectField(field)}>
+                {field.name}
+              </option>
+            ))}
+          </select>
+          {selectedField && !!aggregateOperations.length && (
+            <select>
+              <option value=''></option>
+              {aggregateOperations.map((aggregateOperation) => (
+                <option
+                  key={aggregateOperation}
+                  onClick={() => selectAggregateOperation(aggregateOperation)}
+                >
+                  {aggregateOperation}
+                </option>
+              ))}
+            </select>
+          )}
+          {selectedField && (selectedAggregateOperation || !aggregateOperations.length) && (
+            <button
+              onClick={() => {
+                if (selectedAggregateOperation) {
+                  querier.addCommand(
+                    new AggregateCommand(selectedField, selectedAggregateOperation),
+                  );
+                } else {
+                  querier.addCommand(new SelectCommand(selectedField));
+                }
+                update({});
+              }}
+            >
+              add
+            </button>
+          )}
+        </>
+      )
+    );
+  }
 
   function OrderBySelectCmp(): any {
     const [selectedField, selectField] = useState(undefined as Field | undefined);
