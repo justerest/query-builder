@@ -35,7 +35,7 @@ export abstract class Command {
   }
 
   isMatch(command: Command): boolean {
-    return this.isCommandWithSameField(command) && this.type === command.type;
+    return this.id.startsWith(command.id);
   }
 
   protected isCommandWithSameField(command: Command): boolean {

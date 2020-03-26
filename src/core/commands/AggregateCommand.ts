@@ -27,12 +27,4 @@ export class AggregateCommand extends Command {
   protected isSameCompatible(querier: Querier): boolean {
     return !querier.hasCommand(new GroupByCommand(this.field));
   }
-
-  isMatch(command: Command): boolean {
-    return (
-      super.isMatch(command) &&
-      (!(command as AggregateCommand).aggregateOperation ||
-        (command as AggregateCommand).aggregateOperation === this.aggregateOperation)
-    );
-  }
 }

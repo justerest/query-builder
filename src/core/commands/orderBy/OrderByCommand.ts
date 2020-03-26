@@ -25,12 +25,4 @@ export class OrderByCommand extends Command {
   protected isSameCompatible(querier: Querier): boolean {
     return !querier.hasCommand(OrderByCommand.getBaseOrderByCommand(this.field));
   }
-
-  isMatch(command: Command): boolean {
-    return (
-      super.isMatch(command) &&
-      (!(command as OrderByCommand).direction ||
-        this.direction === (command as OrderByCommand).direction)
-    );
-  }
 }
