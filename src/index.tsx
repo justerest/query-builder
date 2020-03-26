@@ -10,6 +10,7 @@ import { PresentationCommandBuilder } from './core/commands/PresentationCommandB
 import { SelectCommand } from './core/commands/SelectCommand';
 import { Field } from './core/Field';
 import { Querier } from './core/Querier';
+import { GroupByCommandSplitter } from './GroupByCommandSplitter';
 import { OrderByCommandSplitter } from './OrderByCommandSplitter';
 import { PresentationCommandSplitter } from './PresentationCommandSplitter';
 
@@ -61,19 +62,7 @@ const App: React.FC = () => {
             </li>
           ))}
       </ul>
-      <ul>
-        {groupByCommandBuilder.getAvailableCommands(fields, querier).map((command) => (
-          <li
-            key={command.id}
-            onClick={() => {
-              querier.addCommand(command);
-              update({});
-            }}
-          >
-            {command.field.name}
-          </li>
-        ))}
-      </ul>
+      <GroupBySelectCmp></GroupBySelectCmp>
       <h3>Order By Fields</h3>
       <ul>
         {querier
@@ -94,6 +83,37 @@ const App: React.FC = () => {
       <OrderBySelectCmp></OrderBySelectCmp>
     </main>
   );
+
+  function GroupBySelectCmp(): any {
+    const [selectedField, selectField] = useState(undefined as Field | undefined);
+    const groupByCommandSplitter = new GroupByCommandSplitter();
+    const groupByCommands = groupByCommandBuilder.getAvailableCommands(fields, querier);
+    const groupByFields = groupByCommandSplitter.getFields(groupByCommands);
+    return (
+      !!groupByCommands.length && (
+        <>
+          <select>
+            <option value=''></option>
+            {groupByFields.map((field) => (
+              <option key={field.id} onClick={() => selectField(field)}>
+                {field.name}
+              </option>
+            ))}
+          </select>
+          {selectedField && (
+            <button
+              onClick={() => {
+                querier.addCommand(new GroupByCommand(selectedField));
+                update({});
+              }}
+            >
+              add
+            </button>
+          )}
+        </>
+      )
+    );
+  }
 
   function PresentationSelectCmp(): any {
     const [selectedField, selectField] = useState(undefined as Field | undefined);
