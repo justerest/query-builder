@@ -15,7 +15,7 @@ export class Querier {
       this.commands.push(command);
       this.commandIdSet.add(command.id);
     }
-    command.relativeCommands?.().forEach((c) => this.addCommand(c));
+    command.relativeCommands?.forEach((c) => this.addCommand(c));
   }
 
   removeCommand(command: Command): void {
@@ -26,10 +26,10 @@ export class Querier {
       this.commands.splice(index, 1);
       this.commandIdSet.delete(command.id);
     }
-    command.relativeCommands?.().forEach((c) => this.removeCommand(c));
+    command.relativeCommands?.forEach((c) => this.removeCommand(c));
   }
 
   private isRelative(command: Command): boolean {
-    return this.commands.some((c) => c.relativeCommands?.().some((rc) => rc.id === command.id));
+    return this.commands.some((c) => c.relativeCommands?.some((rc) => rc.id === command.id));
   }
 }

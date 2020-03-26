@@ -17,7 +17,7 @@ describe('SelectCommand', () => {
   });
 
   it('+relativeCommands should returns [GroupByCommand with same field]', () => {
-    const [groupByCommand] = command.relativeCommands();
+    const [groupByCommand] = command.relativeCommands;
     expect(groupByCommand.id).toBe(new GroupByCommand(field).id);
   });
 

@@ -11,6 +11,7 @@ export abstract class Command {
   id: string;
   field: Field;
   type: CommandType;
+  relativeCommands?: Command[];
 
   constructor(type: CommandType, field: Field) {
     this.id = makeId(type, field.id);
@@ -20,10 +21,6 @@ export abstract class Command {
 
   compatible(commands: Command[]): boolean {
     return true;
-  }
-
-  relativeCommands(): Command[] {
-    return [];
   }
 
   protected isCommandWithSameField = (command: Command): boolean =>

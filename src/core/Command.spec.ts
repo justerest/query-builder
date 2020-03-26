@@ -5,7 +5,7 @@ describe('Command', () => {
     expect(Command.prototype.compatible([])).toBe(true);
   });
 
-  it('+relativeCommands() should returns true', () => {
-    expect(Command.prototype.relativeCommands()).toEqual([]);
+  it('+relativeCommands should be undefined', () => {
+    expect(Command.prototype.relativeCommands).toBeUndefined();
   });
 });

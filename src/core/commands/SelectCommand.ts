@@ -8,18 +8,15 @@ export class SelectCommand extends Command {
     return command.type === CommandType.Select;
   }
 
+  relativeCommands: Command[] = [new GroupByCommand(this.field)];
+
   constructor(field: Field) {
     super(CommandType.Select, field);
   }
 
   // TODO: уточнить как должно работать
-  // ?? может рекурсивно проверять relativeCommands?
   // Добавил, потому что нельзя сочетать AggregateCommand с GroupBy
   compatible(commands: Command[]): boolean {
-    return !commands.filter(this.isCommandWithSameField).some(AggregateCommand.isAggregateCommand);
-  }
-
-  relativeCommands(): Command[] {
-    return [new GroupByCommand(this.field)];
+    return this.relativeCommands.every((c) => c.compatible(commands));
   }
 }
