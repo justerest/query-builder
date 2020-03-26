@@ -20,6 +20,14 @@ export abstract class Command {
   }
 
   compatible(commands: Command[]): boolean {
+    return this.isSameCompatible(commands) && this.isRelativeCommandsCompatible(commands);
+  }
+
+  private isRelativeCommandsCompatible(commands: Command[]): boolean {
+    return this.relativeCommands?.every((rc) => rc.compatible(commands)) ?? true;
+  }
+
+  protected isSameCompatible(commands: Command[]): boolean {
     return true;
   }
 

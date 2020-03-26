@@ -11,7 +11,7 @@ export class GroupByCommand extends Command {
     super(CommandType.GroupBy, field);
   }
 
-  compatible(commands: Command[]): boolean {
+  protected isSameCompatible(commands: Command[]): boolean {
     return !commands.filter(AggregateCommand.isAggregateCommand).some(this.isCommandWithSameField);
   }
 }

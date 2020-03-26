@@ -15,7 +15,7 @@ describe('AggregateCommand', () => {
     expect(command).toBeInstanceOf(AggregateCommand);
   });
 
-  it('+compatible() should returns false for aggregate command with same field', () => {
+  it('+compatible() should returns false for group by command with same field', () => {
     const groupByCommand = new GroupByCommand(field);
     expect(command.compatible([groupByCommand])).toBe(false);
   });

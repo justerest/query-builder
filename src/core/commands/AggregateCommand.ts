@@ -19,7 +19,7 @@ export class AggregateCommand extends Command {
     this.id = makeId(this.id, aggregateOperation);
   }
 
-  compatible(commands: Command[]): boolean {
+  protected isSameCompatible(commands: Command[]): boolean {
     return !commands.filter(GroupByCommand.isGroupByCommand).some(this.isCommandWithSameField);
   }
 }
