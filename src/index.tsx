@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 
+import { getAggregateOperations, getDirections, getFields } from './commandPropsMappers';
 import { AggregateCommand, AggregateOperation } from './core/commands/AggregateCommand';
 import { GroupByCommand } from './core/commands/groupBy/GroupByCommand';
 import { GroupByCommandBuilder } from './core/commands/groupBy/GroupByCommandBuilder';
@@ -10,9 +11,6 @@ import { PresentationCommandBuilder } from './core/commands/PresentationCommandB
 import { SelectCommand } from './core/commands/SelectCommand';
 import { Field } from './core/Field';
 import { Querier } from './core/Querier';
-import { GroupByCommandSplitter } from './GroupByCommandSplitter';
-import { OrderByCommandSplitter } from './OrderByCommandSplitter';
-import { PresentationCommandSplitter } from './PresentationCommandSplitter';
 
 const presentationCommandBuilder = new PresentationCommandBuilder();
 const groupByCommandBuilder = new GroupByCommandBuilder();
@@ -86,9 +84,8 @@ const App: React.FC = () => {
 
   function GroupBySelectCmp(): any {
     const [selectedField, selectField] = useState(undefined as Field | undefined);
-    const groupByCommandSplitter = new GroupByCommandSplitter();
     const groupByCommands = groupByCommandBuilder.getAvailableCommands(fields, querier);
-    const groupByFields = groupByCommandSplitter.getFields(groupByCommands);
+    const groupByFields = getFields(groupByCommands);
     return (
       !!groupByCommands.length && (
         <>
@@ -120,13 +117,9 @@ const App: React.FC = () => {
     const [selectedAggregateOperation, selectAggregateOperation] = useState(
       undefined as AggregateOperation | undefined,
     );
-    const presentationCommandSplitter = new PresentationCommandSplitter();
     const presentationCommands = presentationCommandBuilder.getAvailableCommands(fields, querier);
-    const presentationFields = presentationCommandSplitter.getFields(presentationCommands);
-    const aggregateOperations = presentationCommandSplitter.getAggregateOperations(
-      presentationCommands,
-      selectedField,
-    );
+    const presentationFields = getFields(presentationCommands);
+    const aggregateOperations = getAggregateOperations(presentationCommands, selectedField);
     return (
       !!presentationCommands.length && (
         <>
@@ -175,10 +168,9 @@ const App: React.FC = () => {
   function OrderBySelectCmp(): any {
     const [selectedField, selectField] = useState(undefined as Field | undefined);
     const [selectedDirection, selectDirection] = useState(undefined as Direction | undefined);
-    const orderByCommandSplitter = new OrderByCommandSplitter();
     const orderByCommands = orderByCommandBuilder.getAvailableCommands(fields, querier);
-    const orderByFields = orderByCommandSplitter.getFields(orderByCommands);
-    const directions = orderByCommandSplitter.getDirections(orderByCommands, selectedField);
+    const orderByFields = getFields(orderByCommands);
+    const directions = getDirections(orderByCommands, selectedField);
     return (
       !!orderByCommands.length && (
         <>
