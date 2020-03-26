@@ -9,7 +9,7 @@ export abstract class CommandBuilder<TCommand extends Command = Command> {
     return fields
       .flatMap((field) => this.createCommands(field, querier))
       .filter((command) => !querierCommandIdSet.has(command.id))
-      .filter((command) => command.compatible(querierCommands));
+      .filter((command) => !querier || command.compatible(querier));
   }
 
   protected abstract createCommands(field: Field, querier?: Querier): TCommand[];

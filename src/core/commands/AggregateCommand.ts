@@ -1,6 +1,7 @@
 import { makeId } from 'src/utils/makeId';
 import { Command, CommandType } from '../Command';
 import { Field } from '../Field';
+import { Querier } from '../Querier';
 import { GroupByCommand } from './groupBy/GroupByCommand';
 
 export enum AggregateOperation {
@@ -10,6 +11,10 @@ export enum AggregateOperation {
 }
 
 export class AggregateCommand extends Command {
+  static getBaseAggregateCommand(field: Field): AggregateCommand {
+    return new AggregateCommand(field, '' as any);
+  }
+
   static isAggregateCommand(command: Command): command is AggregateCommand {
     return command.type === CommandType.Aggregate;
   }
@@ -19,15 +24,15 @@ export class AggregateCommand extends Command {
     this.id = makeId(this.id, aggregateOperation);
   }
 
-  protected isSameCompatible(commands: Command[]): boolean {
-    return !commands.filter(GroupByCommand.isGroupByCommand).some(this.isCommandWithSameField);
+  protected isSameCompatible(querier: Querier): boolean {
+    return !querier.hasCommand(new GroupByCommand(this.field));
   }
 
   isMatch(command: Command): boolean {
     return (
-      AggregateCommand.isAggregateCommand(command) &&
-      this.isCommandWithSameField(command) &&
-      (!command.aggregateOperation || command.aggregateOperation === this.aggregateOperation)
+      super.isMatch(command) &&
+      (!(command as AggregateCommand).aggregateOperation ||
+        (command as AggregateCommand).aggregateOperation === this.aggregateOperation)
     );
   }
 }

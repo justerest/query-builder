@@ -1,4 +1,5 @@
 import { Field } from '../Field';
+import { Querier } from '../Querier';
 import { AggregateCommand, AggregateOperation } from './AggregateCommand';
 import { GroupByCommand } from './groupBy/GroupByCommand';
 import { SelectCommand } from './SelectCommand';
@@ -23,6 +24,8 @@ describe('SelectCommand', () => {
 
   it('+compatible() should returns false for [AggregateCommand with same field]', () => {
     const aggregateCommand = new AggregateCommand(field, AggregateOperation.Average);
-    expect(command.compatible([aggregateCommand])).toBe(false);
+    const querier = new Querier();
+    querier.addCommand(aggregateCommand);
+    expect(command.compatible(querier)).toBe(false);
   });
 });

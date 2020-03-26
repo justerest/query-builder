@@ -1,3 +1,4 @@
+import { Querier } from 'src/core/Querier';
 import { Field } from '../../Field';
 import { AggregateCommand, AggregateOperation } from '../AggregateCommand';
 import { GroupByCommand } from './GroupByCommand';
@@ -17,6 +18,8 @@ describe('GroupByCommand', () => {
 
   it('+compatible() should returns false for aggregate command with same field', () => {
     const aggregateCommand = new AggregateCommand(field, AggregateOperation.Summa);
-    expect(groupByCommand.compatible([aggregateCommand])).toBe(false);
+    const querier = new Querier();
+    querier.addCommand(aggregateCommand);
+    expect(groupByCommand.compatible(querier)).toBe(false);
   });
 });

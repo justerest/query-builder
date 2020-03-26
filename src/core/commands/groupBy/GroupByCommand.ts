@@ -1,3 +1,4 @@
+import { Querier } from 'src/core/Querier';
 import { Command, CommandType } from '../../Command';
 import { Field } from '../../Field';
 import { AggregateCommand } from '../AggregateCommand';
@@ -11,11 +12,7 @@ export class GroupByCommand extends Command {
     super(CommandType.GroupBy, field);
   }
 
-  protected isSameCompatible(commands: Command[]): boolean {
-    return !commands.filter(AggregateCommand.isAggregateCommand).some(this.isCommandWithSameField);
-  }
-
-  isMatch(command: Command): boolean {
-    return GroupByCommand.isGroupByCommand(command) && this.isCommandWithSameField(command);
+  protected isSameCompatible(querier: Querier): boolean {
+    return !querier.hasCommand(AggregateCommand.getBaseAggregateCommand(this.field));
   }
 }

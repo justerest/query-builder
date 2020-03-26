@@ -14,7 +14,7 @@ export class Querier {
   }
 
   addCommand(command: Command): void {
-    assert(command.compatible?.(this.getCommands()) !== false, 'Command not compatible');
+    assert(command.compatible?.(this) ?? true, 'Command not compatible');
     if (this.commandIdSet.has(command.id)) return;
     this.commands.push(command);
     this.commandIdSet.add(command.id);

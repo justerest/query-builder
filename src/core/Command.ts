@@ -1,5 +1,6 @@
 import { makeId } from 'src/utils/makeId';
 import { Field } from './Field';
+import { Querier } from './Querier';
 
 export enum CommandType {
   Select = 'select',
@@ -19,20 +20,23 @@ export abstract class Command {
     this.field = field;
   }
 
-  compatible(commands: Command[]): boolean {
-    return this.isSameCompatible(commands) && this.isRelativeCommandsCompatible(commands);
+  compatible(querier: Querier): boolean {
+    return this.isSameCompatible(querier) && this.isRelativeCommandsCompatible(querier);
   }
 
-  abstract isMatch(command: Command): boolean;
-
-  private isRelativeCommandsCompatible(commands: Command[]): boolean {
-    return this.relativeCommands?.every((rc) => rc.compatible(commands)) ?? true;
-  }
-
-  protected isSameCompatible(commands: Command[]): boolean {
+  protected isSameCompatible(querier: Querier): boolean {
     return true;
   }
 
-  protected isCommandWithSameField = (command: Command): boolean =>
-    command.field.id === this.field.id;
+  private isRelativeCommandsCompatible(querier: Querier): boolean {
+    return this.relativeCommands?.every((rc) => rc.compatible(querier)) ?? true;
+  }
+
+  isMatch(command: Command): boolean {
+    return this.isCommandWithSameField(command) && this.type === command.type;
+  }
+
+  protected isCommandWithSameField(command: Command): boolean {
+    return this.field.id === command.field.id;
+  }
 }
