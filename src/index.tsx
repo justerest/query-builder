@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 
-import { CommandSplitter } from './CommandSplitter';
 import { AggregateCommand } from './core/commands/AggregateCommand';
 import { GroupByCommand } from './core/commands/groupBy/GroupByCommand';
 import { GroupByCommandBuilder } from './core/commands/groupBy/GroupByCommandBuilder';
-import { OrderByCommand } from './core/commands/orderBy/OrderByCommand';
+import { Direction, OrderByCommand } from './core/commands/orderBy/OrderByCommand';
 import { OrderByCommandBuilder } from './core/commands/orderBy/OrderByCommandBuilder';
 import { PresentationCommandBuilder } from './core/commands/PresentationCommandBuilder';
 import { SelectCommand } from './core/commands/SelectCommand';
 import { Field } from './core/Field';
 import { Querier } from './core/Querier';
+import { OrderByCommandSplitter } from './OrderByCommandSplitter';
 
 const presentationCommandBuilder = new PresentationCommandBuilder();
 const groupByCommandBuilder = new GroupByCommandBuilder();
@@ -110,33 +110,45 @@ const App: React.FC = () => {
   );
 
   function OrderBySelectCmp(): any {
-    const commandSplitter = new CommandSplitter();
+    const [selectedField, selectField] = useState(undefined as Field | undefined);
+    const [selectedDirection, selectDirection] = useState(undefined as Direction | undefined);
+    const orderByCommandSplitter = new OrderByCommandSplitter();
     const orderByCommands = orderByCommandBuilder.getAvailableCommands(fields, querier);
-    const orderByFields = commandSplitter.getFields(orderByCommands);
-    const directions = commandSplitter.select(orderByCommands, {
-      select: (command) => command.direction,
-    });
+    const orderByFields = orderByCommandSplitter.getFields(orderByCommands);
+    const directions = orderByCommandSplitter.getDirections(orderByCommands, selectedField);
     return (
-      <>
-        <select>
-          {orderByFields.map((field) => (
-            <option key={field.id}>{field.name}</option>
-          ))}
-        </select>
-        <select>
-          {directions.map((direction) => (
-            <option key={direction}>{direction}</option>
-          ))}
-        </select>
-        <button
-          onClick={() => {
-            querier.addCommand(orderByCommands[0]);
-            update({});
-          }}
-        >
-          add
-        </button>
-      </>
+      !!orderByCommands.length && (
+        <>
+          <select>
+            <option value=''></option>
+            {orderByFields.map((field) => (
+              <option key={field.id} onClick={() => selectField(field)}>
+                {field.name}
+              </option>
+            ))}
+          </select>
+          {selectedField && (
+            <select>
+              <option value=''></option>
+              {directions.map((direction) => (
+                <option key={direction} onClick={() => selectDirection(direction)}>
+                  {direction}
+                </option>
+              ))}
+            </select>
+          )}
+          {selectedField && selectedDirection && (
+            <button
+              onClick={() => {
+                querier.addCommand(new OrderByCommand(selectedField, selectedDirection));
+                update({});
+              }}
+            >
+              add
+            </button>
+          )}
+        </>
+      )
     );
   }
 };
